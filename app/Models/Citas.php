@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Citas extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'fecha_cita',
+        'mensaje',
+        'user_id'
+    ];
 }
