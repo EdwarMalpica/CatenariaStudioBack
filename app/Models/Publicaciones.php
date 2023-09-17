@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Files extends Model
+class Publicaciones extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
-        'nombre',
-        'path',
-        'formato'
+        'tipo_publicacion_id',
+        'titulo',
+        'fecha_creacion',
+        'descripcion',
+        'user_id'
     ];
 }
