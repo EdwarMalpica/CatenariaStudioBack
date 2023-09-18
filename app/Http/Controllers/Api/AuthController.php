@@ -92,7 +92,7 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required'
             ]);
-
+            //Validacion del request en el login
             if($validateUser->fails()){
                 return response()->json([
                     'status' => false,
