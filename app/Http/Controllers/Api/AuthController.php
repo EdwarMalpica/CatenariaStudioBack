@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Datos_Usuarios;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -25,7 +26,11 @@ class AuthController extends Controller
             [
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required'
+                'password' => 'required',
+                'nombres' => 'required',
+                'apellidos' => 'required',
+                'fecha_nacimiento' => 'required',
+                'numero_telefonico' => 'required'
             ]);
             if($validateUser->fails()){
                 return response()->json([
@@ -39,6 +44,25 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
+
+            if (!$user) {
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Error al crear el usuario',
+                ], 500);
+            }
+
+            $user_id = $user->id;
+            $fecha_nacimiento = date('Y-m-d', strtotime($request->fecha_nacimiento));
+            $datos_usuario = Datos_Usuarios::create([
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'fecha_nacimiento' => $fecha_nacimiento,
+                'numero_telefonico' => $request->numero_telefonico,
+                'user_id' => $user_id
+            ]);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Usuario creado exitosamente',
@@ -48,6 +72,7 @@ class AuthController extends Controller
         }catch (\Throwable $th)
         {
             return response()->json([
+                'user' => $user->id,
                 'status' => false,
                 'message' => $th->getMessage()
             ], 500);
