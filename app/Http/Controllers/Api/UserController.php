@@ -13,7 +13,13 @@ class UserController extends Controller
             $user = auth()->user();
             return response()->json([
                 'status' => true,
-                'user' => $user->detalle
+                'user' => [
+                    'id' => $user->id,
+                    'nombres' => $user->detalle->nombres,
+                    'apellidos' => $user->detalle->apellidos,
+                    'fecha_nacimiento' => $user->detalle->fecha_nacimiento,
+                    'numero_telefonico' => $user->detalle->numero_telefonico,
+                ]
             ]);
         }catch (\Exception $e){
             return response()->json([
