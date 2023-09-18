@@ -21,3 +21,10 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//Requiere Autenticacion
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logoutUser', [AuthController::class, 'destroy'])
+                ->name('logoutUser');
+});
+
