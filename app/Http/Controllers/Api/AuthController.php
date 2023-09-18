@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -93,5 +94,23 @@ class AuthController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+
+    //Logout the user
+    public function destroy()
+    {
+        try {
+            auth()->user()->tokens()->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Logout exitoso'
+            ],200);
+        }catch(Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ],500);
+        }
+
     }
 }

@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Files extends Model
+class Datos_Usuarios extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
-        'nombre',
-        'path',
-        'formato'
+        'nombres',
+        'apellidos',
+        'fecha_nacimiento',
+        'numero_telefonico',
+        'user_id'
     ];
 }
