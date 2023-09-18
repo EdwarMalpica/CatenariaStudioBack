@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('nombres');
             $table->string('apellidos');
-            $table->time('fecha_nacimiento');
+            $table->date('fecha_nacimiento');
             $table->string('numero_telefonico');
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
+
             $table->timestamps();
             $table->softDeletes();
         });
