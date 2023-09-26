@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+
 
 class AuthController extends Controller
 {
@@ -38,11 +40,14 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
+            
+            event(new Registered($user));
             return response()->json([
                 'status' => true,
                 'message' => 'Usuario creado exitosamente',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ],200);
+
 
         }catch (\Throwable $th)
         {
