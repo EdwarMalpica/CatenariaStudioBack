@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -45,3 +46,11 @@ Route::post('/email/verification-notification', function (Request $request) {
  
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+//Requiere Autenticacion
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logoutUser', [AuthController::class, 'destroy'])
+                ->name('logoutUser');
+
+    Route::get('/user', [UserController::class, 'show'])->name('showUser');
+});
+
