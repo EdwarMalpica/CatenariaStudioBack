@@ -115,7 +115,8 @@ class CitasController extends Controller
             $citas->estado;
             return response()->json([
                 'status' => true,
-                'cita' => $citas
+                'cita' => $citas,
+                'estados' => EstadoCita::all()
             ]);
         }catch(Exception $e){
             return response()->json([
@@ -164,5 +165,22 @@ class CitasController extends Controller
         }
     }
 
+    public function destroy(Citas $cita){
+        try{
+
+            $cita->delete();
+
+            return response()->json([
+                'status' => true,
+                'mensaje' => 'Cita Eliminada correctamente'
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al actualizar la cita'
+            ],400);
+        }
+    }
 
 }
