@@ -6,19 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Citas extends Model
+class EstadoCita extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'fecha_cita',
-        'mensaje',
-        'user_id'
+        'nombre'
     ];
 
-    public function estado(){
-        return $this->belongsTo(EstadoCita::class);
+    public function citas(){
+        return  $this->hasMany(Citas::class);
     }
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
+
 }
