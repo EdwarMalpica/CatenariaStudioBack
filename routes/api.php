@@ -38,5 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/citas',[CitasController::class, 'store']);
     Route::get('/citas/{citas}/edit',[CitasController::class, 'edit']);
     Route::post('/citas/update',[CitasController::class, 'update']);
+    Route::get('/citas/user/',[CitasController::class, 'indexUser']);
 });
 
