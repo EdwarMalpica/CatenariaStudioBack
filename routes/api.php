@@ -28,7 +28,6 @@ Route::post('/horarios', [HorariosController::class, 'store']);
 //Citas
 Route::get('/citas', [CitasController::class, 'index']);
 Route::get('/citas/create', [CitasController::class, 'create']);
-
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
@@ -37,5 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Citas
     Route::post('/citas',[CitasController::class, 'store']);
+    Route::get('/citas/{citas}/edit',[CitasController::class, 'edit']);
+    Route::post('/citas/update',[CitasController::class, 'update']);
 });
 

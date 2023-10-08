@@ -90,4 +90,58 @@ class CitasController extends Controller
         }
     }
 
+    public function edit(Citas $citas){
+        try{
+            $citas->estado;
+            return response()->json([
+                'status' => true,
+                'cita' => $citas
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al obtener la cita'
+            ],400);
+        }
+    }
+
+    public function update(Request $request){
+        try{
+            $validate = Validator::make($request->all(), [
+                'id' => 'required',
+                'fecha_cita' => 'required',
+                'mensaje' => 'required',
+                'estado_cita_id' => 'required',
+            ]);
+
+            if($validate->fails()){
+                return response()->json([
+                    'errors' => $validate->errors(),
+                    'status' => false,
+                    'message' => 'Error al actualizar la cita, o cita no encontrada'
+                ],400);
+            }
+
+            $fecha_cita = Carbon::parse($request->fecha_cita);
+            $cita = Citas::where('id', $request->id)->first();
+            $cita->fecha_cita = $fecha_cita;
+            $cita->mensaje = $request->mensaje;
+            $cita->estado_cita_id = $request->estado_cita_id;
+            $cita->save();
+
+            return response()->json([
+                'status' => true,
+                'mensaje' => 'Cita Actualizada correctamente'
+            ]);
+
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al actualizar la cita'
+            ],400);
+        }
+    }
+
 }
