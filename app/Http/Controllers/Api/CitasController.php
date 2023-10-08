@@ -36,6 +36,26 @@ class CitasController extends Controller
         }
     }
 
+    public function indexUser(){
+        try{
+
+            return response()->json([
+                'status' => true,
+                'citas' => auth()->user()->citas->map(function ($cita){
+                    $cita->estado;
+                    return $cita;
+                })
+
+            ],200);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al obtener las citas'
+            ],400);
+        }
+    }
+
     public function create(){
         try{
             return response()->json([
@@ -143,5 +163,6 @@ class CitasController extends Controller
             ],400);
         }
     }
+
 
 }
