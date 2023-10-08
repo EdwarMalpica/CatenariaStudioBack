@@ -12,11 +12,12 @@ class Citas extends Model
     protected $fillable = [
         'fecha_cita',
         'mensaje',
-        'user_id'
+        'user_id',
+        'estado_cita_id'
     ];
 
     public function estado(){
-        return $this->belongsTo(EstadoCita::class);
+        return $this->belongsTo(EstadoCita::class, 'estado_cita_id');
     }
     public function user(){
         return $this->belongsTo(User::class);
