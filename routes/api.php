@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\HorariosController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -23,11 +24,14 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 //Horarios
 Route::get('/horarios', [HorariosController::class, 'index']);
 Route::post('/horarios', [HorariosController::class, 'store']);
+
+//Citas
+Route::get('/citas', [CitasController::class, 'index']);
+
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
                 ->name('logoutUser');
-
     Route::get('/user', [UserController::class, 'show'])->name('showUser');
 });
 
