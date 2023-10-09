@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CitasController;
+use App\Http\Controllers\Api\HorariosController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,12 +26,11 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Horarios
+Route::get('/horarios', [HorariosController::class, 'index']);
+Route::post('/horarios', [HorariosController::class, 'store']);
 
 
-//------------------------------------------------------------------------------------------------------------------
 
 
 Route::post('/email/verification-notification', function (Request $request) {
@@ -38,14 +39,25 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
-//Requiere Autenticacion
+
+Route::get('/citas', [CitasController::class, 'index']);
+Route::get('/citas/create', [CitasController::class, 'create']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
                 ->name('logoutUser');
 
     Route::get('/email/verify/{id}/{hash}',[UserController::class,"verifyEmail"])->middleware('signed')->name('verification.verify');
 
+
     Route::get('/user', [UserController::class, 'show'])->name('showUser');
+
+    //Citas
+    Route::post('/citas',[CitasController::class, 'store']);
+    Route::get('/citas/{citas}/edit',[CitasController::class, 'edit']);
+    Route::post('/citas/update',[CitasController::class, 'update']);
+    Route::get('/citas/user/',[CitasController::class, 'indexUser']);
+    Route::delete('/citas/{cita}',[CitasController::class, 'destroy']);
 });
 
 
