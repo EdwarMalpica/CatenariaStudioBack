@@ -15,5 +15,10 @@ class Files extends Model
         'path',
         'formato'
     ];
-    
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
 }
