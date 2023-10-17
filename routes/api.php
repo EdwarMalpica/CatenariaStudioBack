@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\HorariosController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,7 @@ Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 //Horarios
-Route::get('/horarios', [HorariosController::class, 'index']);
+Route::get('/horarios', [HorariosController::class, 'pindex']);
 Route::post('/horarios', [HorariosController::class, 'store']);
 
 //Citas
@@ -42,3 +43,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/citas/{cita}',[CitasController::class, 'destroy']);
 });
 
+
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+                ->name('password.request');
+
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+                ->name('password.email');
+
+    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+                ->name('password.reset');
+
+    Route::post('reset-password', [NewPasswordController::class, 'store'])
+                ->name('password.store');
+});
