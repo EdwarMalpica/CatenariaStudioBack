@@ -28,6 +28,9 @@ Route::post('/horarios', [HorariosController::class, 'store']);
 //Citas
 Route::get('/citas', [CitasController::class, 'index']);
 Route::get('/citas/create', [CitasController::class, 'create']);
+
+//Proyectos
+
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
