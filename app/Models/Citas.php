@@ -15,6 +15,11 @@ class Citas extends Model
         'user_id',
         'estado_cita_id'
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     public function estado(){
         return $this->belongsTo(EstadoCita::class, 'estado_cita_id');
