@@ -23,4 +23,10 @@ class Publicaciones extends Model
         'deleted_at'
     ];
 
+
+    public function files(){
+        return $this->hasMany(Files::class,'publicacion_id');
+    }
+
+
 }
