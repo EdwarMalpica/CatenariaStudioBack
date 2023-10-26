@@ -47,7 +47,7 @@ Route::get('/citas/create', [CitasController::class, 'create']);
 //Proyectos
 Route::post('/proyectos/create', [PublicacionesController::class,'store']);
 Route::get('/proyectos', [PublicacionesController::class,'index']);
-
+Route::get('/proyectos/{publicaciones}', [PublicacionesController::class,'show']);
 
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {

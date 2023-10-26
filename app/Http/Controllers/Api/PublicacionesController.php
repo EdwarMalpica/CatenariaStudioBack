@@ -100,6 +100,15 @@ class PublicacionesController extends Controller
 
     public function show(Publicaciones $publicaciones){
         try{
+            $publicaciones->files->map(function($file){
+                $file->path = Storage::url($file->path);
+                return $file;
+            });
+            $publicaciones->miniatura_path = Storage::url($publicaciones->miniatura_path);
+            return response()->json([
+                'status' => true,
+                'publicacion' => $publicaciones
+            ]);
 
         }catch(Exception $e){
             return response()->json([

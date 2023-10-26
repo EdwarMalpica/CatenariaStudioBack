@@ -16,11 +16,13 @@ class Files extends Model
         'formato',
         'publicacion_id'
     ];
-  
+
     protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at'
     ];
-
+    public function publicacion(){
+        return $this->belongsTo(Publicaciones::class, 'publicacion_id');
+    }
 }
