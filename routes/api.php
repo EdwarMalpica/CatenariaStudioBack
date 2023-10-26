@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CitasController;
+use App\Http\Controllers\Api\ArchivosController;
 use App\Http\Controllers\Api\HorariosController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -40,5 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/citas/update',[CitasController::class, 'update']);
     Route::get('/citas/user/',[CitasController::class, 'indexUser']);
     Route::delete('/citas/{cita}',[CitasController::class, 'destroy']);
+
+    //Archivos
+    Route::post('/archivos',[ArchivosController::class, 'upload']);
 });
 
