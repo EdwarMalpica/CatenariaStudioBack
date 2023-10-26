@@ -12,6 +12,11 @@ class EstadoCita extends Model
     protected $fillable = [
         'nombre'
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     public function citas(){
         return  $this->hasMany(Citas::class);

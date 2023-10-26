@@ -14,6 +14,11 @@ class Horario extends Model
         'dia',
         'active'
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
     public function franjas(){
         return $this->hasMany(FranjaHoraria::class, 'horario_id');
     }

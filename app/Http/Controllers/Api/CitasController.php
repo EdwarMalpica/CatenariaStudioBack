@@ -22,6 +22,7 @@ class CitasController extends Controller
                 'citas' => Citas::all(['id','fecha_cita','mensaje','user_id','estado_cita_id'])->map(function($cita){
                     $user = User::where('id', $cita->user_id)->first();
                     $user->detalle = $user->detalle;
+                    $user->numero_telefonico = $user->detalle->numero_telefonico;
                     $cita->user = $user;
                     $cita->estado;
                     return $cita;

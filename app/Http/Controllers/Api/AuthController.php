@@ -113,10 +113,12 @@ class AuthController extends Controller
                 ],401);
             }
             $user = User::where('email',$request->email)->first();
+            $user->detalle;
             return response()->json([
                 'status' => true,
                 'message' => 'Usuario logeado exitosamente',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'token' => $user->createToken("API TOKEN")->plainTextToken,
+                'user' => $user
             ],200);
         }catch (\Throwable $th){
             return response()->json([

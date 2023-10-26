@@ -48,6 +48,7 @@ Route::get('/citas/create', [CitasController::class, 'create']);
 Route::post('/proyectos/create', [PublicacionesController::class,'store']);
 Route::get('/proyectos', [PublicacionesController::class,'index']);
 
+
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
