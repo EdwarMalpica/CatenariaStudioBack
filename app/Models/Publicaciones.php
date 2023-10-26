@@ -14,6 +14,7 @@ class Publicaciones extends Model
         'titulo',
         'fecha_creacion',
         'descripcion',
-        'user_id'
+        'user_id',
+        'contenido'
     ];
 }
