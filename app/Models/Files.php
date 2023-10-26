@@ -13,8 +13,10 @@ class Files extends Model
         'user_id',
         'nombre',
         'path',
-        'formato'
+        'formato',
+        'publicacion_id'
     ];
+  
     protected $hidden = [
         'created_at',
         'updated_at',

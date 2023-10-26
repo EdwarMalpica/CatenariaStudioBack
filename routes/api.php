@@ -3,9 +3,15 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\HorariosController;
+use App\Http\Controllers\api\PublicacionesController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\VerifyEmailController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,16 +31,32 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::get('/horarios', [HorariosController::class, 'index']);
 Route::post('/horarios', [HorariosController::class, 'store']);
 
-//Citas
+
+
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+
 Route::get('/citas', [CitasController::class, 'index']);
 Route::get('/citas/create', [CitasController::class, 'create']);
 
 //Proyectos
+Route::post('/proyectos/create', [PublicacionesController::class,'store']);
+Route::get('/proyectos', [PublicacionesController::class,'index']);
+
 
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
                 ->name('logoutUser');
+
+    Route::get('/email/verify/{id}/{hash}',[UserController::class,"verifyEmail"])->middleware('signed')->name('verification.verify');
+
+
     Route::get('/user', [UserController::class, 'show'])->name('showUser');
 
     //Citas
@@ -44,4 +66,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/citas/user/',[CitasController::class, 'indexUser']);
     Route::delete('/citas/{cita}',[CitasController::class, 'destroy']);
 });
+
+
 
