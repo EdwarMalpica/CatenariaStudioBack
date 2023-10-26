@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\HorariosController;
+use App\Http\Controllers\api\PublicacionesController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,10 @@ Route::post('/horarios', [HorariosController::class, 'store']);
 //Citas
 Route::get('/citas', [CitasController::class, 'index']);
 Route::get('/citas/create', [CitasController::class, 'create']);
+
+//Proyectos
+Route::post('/proyectos/create', [PublicacionesController::class,'store']);
+
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])

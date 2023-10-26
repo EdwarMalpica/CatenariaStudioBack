@@ -13,13 +13,20 @@ class TipoPublicacionesSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('tipo_publicacioness')->insert(
+
+
+        DB::table('tipo_publicaciones')->updateOrInsert(
             [
-                'nombre' => 'articulo'
-            ],
-            [
-                'nombre' => 'proyecto'
+                'nombre' => 'articulo',
+                'created_at' => date('Y-m-d H:i:s')
             ]
-         );
+        );
+        DB::table('tipo_publicaciones')->updateOrInsert(
+            [
+                'nombre' => 'proyecto',
+                'created_at' => date('Y-m-d H:i:s')
+            ]
+        );
+
     }
 }
