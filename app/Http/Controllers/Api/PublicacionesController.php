@@ -8,11 +8,32 @@ use App\Models\Publicaciones;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PublicacionesController extends Controller
 {
 
+    public function index(){
+        try {
+
+            return response()->json([
+                'status' => true,
+                'proyectos' => Publicaciones::where('tipo_publicacion_id', 1)
+                ->get(['id','tipo_publicacion_id','titulo','fecha_creacion','descripcion','miniatura_path'])->map(function($proyecto){
+                    Storage::setVisibility($proyecto->miniatura_path, 'public');
+                    $proyecto->miniatura_path = Storage::url($proyecto->miniatura_path);
+                    return $proyecto;
+                })
+            ]);
+        } catch (Exception $th) {
+            return response()->json([
+                'errors' => $th->getMessage(),
+                'status' => false,
+                'message' => 'Error al traer los proyectos'
+            ],400);
+        }
+    }
 
     public function store(Request $request){
         try{
@@ -36,6 +57,7 @@ class PublicacionesController extends Controller
                 'fecha_creacion' =>$fecha_creacion,
                 'user_id' => $data->user_id,
                 'contenido' => $data->contenido,
+                'miniatura_path' => ''
             ]);
 
             $files = $request->allFiles();
@@ -43,18 +65,23 @@ class PublicacionesController extends Controller
                 foreach($files as $file){
                     $extension =  $file->getClientOriginalExtension();
                     $path = "";
+                    $miniaturaPath = "";
                     $fileName = $file->getClientOriginalName();
                     if($extension == 'glb' || $extension == 'gltf'){
                         $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/model', $file->getClientOriginalName());
+                    }else if($file == $request->file('miniatura')){
+                        $miniaturaPath = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', 'minuatura_'.$publicacion->id.'.'.$extension);
                     }else{
                         $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', $file->getClientOriginalName());
                     }
+                    $publicacion->miniatura_path = $miniaturaPath;
+                    $publicacion->save();
                     Files::create([
                         'user_id' => $data->user_id,
                         'nombre' => $fileName,
                         'path' => $path,
                         'formato' => $extension,
-                        'publicacion_id' => $publicacion->id
+                        'publicacion_id' => $publicacion->id,
                     ]);
                 }
             }
