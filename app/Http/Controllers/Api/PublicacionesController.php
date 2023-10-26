@@ -96,9 +96,18 @@ class PublicacionesController extends Controller
                 'message' => 'Error al agregar proyecto'
             ],400);
         }
+    }
 
+    public function show(Publicaciones $publicaciones){
+        try{
 
-
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al agregar proyecto'
+            ],400);
+        }
     }
 
 

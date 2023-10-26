@@ -22,4 +22,6 @@ class Publicaciones extends Model
         'updated_at',
     ];
 
+    
+
 }
