@@ -98,16 +98,16 @@ class PublicacionesController extends Controller
         }
     }
 
-    public function show(Publicaciones $publicaciones){
+    public function show(Publicaciones $publicacion){
         try{
-            $publicaciones->files->map(function($file){
+            $publicacion->files->map(function($file){
                 $file->path = Storage::url($file->path);
                 return $file;
             });
-            $publicaciones->miniatura_path = Storage::url($publicaciones->miniatura_path);
+            $publicacion->miniatura_path = Storage::url($publicacion->miniatura_path);
             return response()->json([
                 'status' => true,
-                'publicacion' => $publicaciones
+                'publicacion' => $publicacion
             ],200);
 
         }catch(Exception $e){
@@ -146,7 +146,6 @@ class PublicacionesController extends Controller
             $publicacion->contenido = $data->contenido;
             $publicacion->miniatura_path = '';
             $publicacion->save();
-
             $files = $request->allFiles();
             if (true) {
                 foreach($files as $file){
@@ -187,5 +186,22 @@ class PublicacionesController extends Controller
         }
     }
 
+    public function destroy(Publicaciones $publicacion){
+        try{
+            Files::where('publicacion_id', $publicacion->id)->delete();
+            Storage::deleteDirectory('public/proyecto/'.$publicacion->id);
+            $publicacion->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Proyecto borrado con exito'
+            ],200);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al actualizar el proyecto'
+            ],400);
+        }
+    }
 
 }

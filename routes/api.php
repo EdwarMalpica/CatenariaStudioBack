@@ -47,8 +47,9 @@ Route::get('/citas/create', [CitasController::class, 'create']);
 //Proyectos
 Route::post('/proyectos/create', [PublicacionesController::class,'store']);
 Route::get('/proyectos', [PublicacionesController::class,'index']);
-Route::get('/proyectos/{publicaciones}', [PublicacionesController::class,'show']);
+Route::get('/proyectos/{publicacion}', [PublicacionesController::class,'show']);
 Route::post('/proyectos/edit', [PublicacionesController::class,'update']);
+Route::delete('/proyectos/{publicacion}', [PublicacionesController::class,'destroy']);
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
