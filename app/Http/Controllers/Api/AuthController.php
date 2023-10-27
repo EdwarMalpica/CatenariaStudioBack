@@ -46,8 +46,8 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
-            
-            event(new Registered($user));
+
+            //event(new Registered($user));
 
             if (!$user) {
 
@@ -77,7 +77,6 @@ class AuthController extends Controller
         }catch (\Throwable $th)
         {
             return response()->json([
-                'user' => $user->id,
                 'status' => false,
                 'message' => $th->getMessage()
             ], 500);

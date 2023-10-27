@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Files extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable = [
         'user_id',
         'nombre',
@@ -20,7 +20,6 @@ class Files extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
-        'deleted_at'
     ];
     public function publicacion(){
         return $this->belongsTo(Publicaciones::class, 'publicacion_id');

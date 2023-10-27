@@ -108,13 +108,81 @@ class PublicacionesController extends Controller
             return response()->json([
                 'status' => true,
                 'publicacion' => $publicaciones
-            ]);
+            ],200);
 
         }catch(Exception $e){
             return response()->json([
                 'errors' => $e->getMessage(),
                 'status' => false,
-                'message' => 'Error al agregar proyecto'
+                'message' => 'Error al obtener proyecto'
+            ],400);
+        }
+    }
+
+
+    public function update(Request $request){
+
+        try{
+            $validate = Validator::make($request->all(), [
+                'data' => 'required'
+            ]);
+            if($validate->fails()){
+                return response()->json([
+                    'errors' => $validate->errors(),
+                    'status' => false,
+                    'message' => 'Error en los datos ingresados'
+                ],400);
+            }
+            $data = json_decode($request->data);
+            $publicacion = Publicaciones::find($data->id);
+            Files::where('publicacion_id', $publicacion->id)->delete();
+            Storage::deleteDirectory('public/proyecto/'.$publicacion->id);
+            $fecha_creacion = Carbon::parse($data->fecha_creacion);
+
+            $publicacion->titulo = $data->titulo;
+            $publicacion->descripcion = $data->descripcion;
+            $publicacion->fecha_creacion = $fecha_creacion;
+            $publicacion->user_id = $data->user_id;
+            $publicacion->contenido = $data->contenido;
+            $publicacion->miniatura_path = '';
+            $publicacion->save();
+
+            $files = $request->allFiles();
+            if (true) {
+                foreach($files as $file){
+                    $extension =  $file->getClientOriginalExtension();
+                    $path = "";
+                    $miniaturaPath = "";
+                    $fileName = $file->getClientOriginalName();
+                    if($extension == 'glb' || $extension == 'gltf'){
+                        $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/model', $file->getClientOriginalName());
+                    }else if($file == $request->file('miniatura')){
+                        $miniaturaPath = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', 'minuatura_'.$publicacion->id.'.'.$extension);
+                    }else{
+                        $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', $file->getClientOriginalName());
+                    }
+                    $publicacion->miniatura_path = $miniaturaPath;
+                    $publicacion->save();
+                    Files::create([
+                        'user_id' => $data->user_id,
+                        'nombre' => $fileName,
+                        'path' => $path,
+                        'formato' => $extension,
+                        'publicacion_id' => $publicacion->id,
+                    ]);
+                }
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Proyecto Actualizado con exito'
+            ],200);
+
+
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al actualizar el proyecto'
             ],400);
         }
     }
