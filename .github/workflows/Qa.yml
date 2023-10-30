@@ -17,6 +17,19 @@ jobs:
         uses: actions/checkout@v2
       - name: Config QA
         run: cp .env.qa .env
+      - name: Config env
+        run: |
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=${{secrets.QA_DB_HOST}}" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=${{secrets.QA_DB_DATABASE}}" >> .env
+          echo "DB_USERNAME=${{secrets.QA_DB_USERNAME}}" >> .env
+          echo "DB_PASSWORD=${{secrets.QA_DB_PASSWORD}}" >> .env
+      - name: build php
+        uses: nanasess/setup-php@v4
+        with:
+          php-version: '8.2'
+      - run: composer install
       - name: Send to ftp server
         uses: joutvhu/ftp-transfer@v1
         with:
@@ -24,6 +37,6 @@ jobs:
           port: 21
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          commands: put ./ public_html/test/
+          commands: put ./ ./test/
 
 
