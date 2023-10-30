@@ -2,9 +2,9 @@ name: ToQa
 
 on:
   push:
-    branches: [ main ]
+    branches: [ Qa ]
   pull_request:
-    branches: [ main ]
+    branches: [ Qa ]
 
 jobs:
 
