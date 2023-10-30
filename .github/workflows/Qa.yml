@@ -18,11 +18,12 @@ jobs:
       - name: Config QA
         run: cp .env.qa .env
       - name: Send to ftp server
-        uses: radenpioneer/astro-ftp-deploy@v0.1.0
+        uses: joutvhu/ftp-transfer@v1
         with:
-          server: ${{ secrets.FPT_SERVER }}
+          host: ${{ secrets.FPT_SERVER }}
+          port: 21
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          directory:  public_html/test/
+          commands: put ./ public_html/test/
 
 
