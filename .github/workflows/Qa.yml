@@ -30,13 +30,25 @@ jobs:
         with:
           php-version: '8.2'
       - run: composer install
-      - name: Send to ftp server
-        uses: joutvhu/ftp-transfer@v1
-        with:
-          host: ${{ secrets.FPT_SERVER }}
-          port: 21
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          commands: put ./ ./test/
+      - name: Install lftp
+        run: |
+          apt-get update
+          apt-get install -y lftp
+      - name: Deploy to FTP
+        run: |
+          lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} -e "set ftp:ssl-allow no; mirror --reverse --delete --only-newer -R /ruta/local /test" ${{ secrets.FPT_SERVER }}
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_HOST: ${{ secrets.FPT_SERVER }}
+
+      # - name: Send to ftp server
+      #   uses: joutvhu/ftp-transfer@v1
+      #   with:
+      #     host: ${{ secrets.FPT_SERVER }}
+      #     port: 21
+      #     username: ${{ secrets.FTP_USERNAME }}
+      #     password: ${{ secrets.FTP_PASSWORD }}
+      #     commands: put ./ ./test/
 
 

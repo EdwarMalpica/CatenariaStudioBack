@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\HorariosController;
-use App\Http\Controllers\api\PublicacionesController;
+use App\Http\Controllers\Api\PublicacionesController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
