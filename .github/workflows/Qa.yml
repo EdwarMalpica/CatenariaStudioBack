@@ -28,19 +28,32 @@ jobs:
       - name: build php
         uses: nanasess/setup-php@v4
         with:
-          php-version: '8.2'
+          php-version: '8.1'
       - run: composer install
-      - name: Install lftp
-        run: |
-          apt-get update
-          apt-get install -y lftp
-      - name: Deploy to FTP
-        run: |
-          lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} -e "set ftp:ssl-allow no; mirror --reverse --delete --only-newer -R /ruta/local /test" ${{ secrets.FPT_SERVER }}
-        env:
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_HOST: ${{ secrets.FPT_SERVER }}
+      - name: Deploy files via SFTP
+        uses: pressidium/lftp-mirror-action@v1
+        with:
+          # SFTP credentials
+          host: ${{ secrets.FPT_SERVER }}
+          port: 21
+          user: ${{ secrets.FTP_USERNAME }}
+          pass: ${{ secrets.FTP_PASSWORD }}
+          # lftp settings
+          onlyNewer: true
+          settings: 'sftp:auto-confirm=yes'
+          # Mirror command options
+          localDir: '.'
+          remoteDir: './test/'
+          reverse: true
+          ignoreFile: '.lftp_ignore'
+          options: '--verbose'
+      # - name: Deploy to FTP
+      #   run: |
+      #     lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} -e "set ftp:ssl-allow no; mirror --reverse --delete --only-newer -R /ruta/local /test" ${{ secrets.FPT_SERVER }}
+      #   env:
+      #     FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      #     FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      #     FTP_HOST: ${{ secrets.FPT_SERVER }}
 
       # - name: Send to ftp server
       #   uses: joutvhu/ftp-transfer@v1
