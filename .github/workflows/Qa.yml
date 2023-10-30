@@ -20,7 +20,7 @@ jobs:
       - name: Send to ftp server
         uses: radenpioneer/astro-ftp-deploy@v0.1.0
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FPT_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           directory:  public_html/test/
