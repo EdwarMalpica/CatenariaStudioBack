@@ -71,10 +71,12 @@ class PublicacionesController extends Controller
                         $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/model', $file->getClientOriginalName());
                     }else if($file == $request->file('miniatura')){
                         $miniaturaPath = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', 'minuatura_'.$publicacion->id.'.'.$extension);
+                        $path = $miniaturaPath;
+                        $publicacion->miniatura_path = $miniaturaPath;
                     }else{
                         $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', $file->getClientOriginalName());
                     }
-                    $publicacion->miniatura_path = $miniaturaPath;
+
                     $publicacion->save();
                     Files::create([
                         'user_id' => $data->user_id,
