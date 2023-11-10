@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
+use App\Models\UserLogin;
+use Illuminate\Support\Facades\DB;
 
 
 class AuthController extends Controller
@@ -112,6 +114,10 @@ class AuthController extends Controller
                 ],401);
             }
             $user = User::where('email',$request->email)->first();
+            $userLogin=new UserLogin;
+            $userLogin->DATE=now();
+            $userLogin->USER_ID=$user->id;
+            $userLogin->save();
             $user->detalle;
             return response()->json([
                 'status' => true,
@@ -144,4 +150,18 @@ class AuthController extends Controller
         }
 
     }
+
+    public function getSuccessfulAuthentication(Request $request){
+        return response()->json([
+            'totalAutenticaciones' => DB::table('USER_LOGINS')
+            ->selectRaw('YEAR(DATE) as year, MONTH(DATE) as month, COUNT(DATE) as count')
+            ->where('USER_ID', 1)
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->limit(3)
+            ->get()
+        ],200);
+    }
+
 }

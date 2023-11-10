@@ -68,5 +68,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/citas/{cita}',[CitasController::class, 'destroy']);
 });
 
+Route::get('/auth/authentication/{user_id}', [AuthController::class, 'getSuccessfulAuthentication']);
+
+
+
 
 
