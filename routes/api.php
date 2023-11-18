@@ -56,6 +56,9 @@ Route::delete('/proyectos/{publicacion}', [PublicacionesController::class,'destr
 Route::get('/logs', [LogsController::class,'index']);
 Route::get('/logs/users', [LogsController::class,'LogsUserActions']);
 Route::get('/logs/proyects', [LogsController::class,'LogsProyectsActions']);
+Route::get('/logs/articles', [LogsController::class,'LogsArticlesActions']);
+Route::get('/logs/citas', [LogsController::class,'LogsCitasActions']);
+
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
