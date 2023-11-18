@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArticlesController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\HorariosController;
@@ -59,6 +60,9 @@ Route::get('/logs/proyects', [LogsController::class,'LogsProyectsActions']);
 Route::get('/logs/articles', [LogsController::class,'LogsArticlesActions']);
 Route::get('/logs/citas', [LogsController::class,'LogsCitasActions']);
 
+//Articulos
+Route::post('/articulos/create', [ArticlesController::class,'store']);
+Route::get('/articulos', [ArticlesController::class,'index']);
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
