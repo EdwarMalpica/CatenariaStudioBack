@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Datos_Usuarios;
+use App\Models\Logs;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class AuthController extends Controller
 
             $user_id = $user->id;
             $fecha_nacimiento = date('Y-m-d', strtotime($request->fecha_nacimiento));
-            $datos_usuario = Datos_Usuarios::create([
+            Datos_Usuarios::create([
                 'nombres' => $request->nombres,
                 'apellidos' => $request->apellidos,
                 'fecha_nacimiento' => $fecha_nacimiento,
@@ -67,6 +68,11 @@ class AuthController extends Controller
                 'user_id' => $user_id
             ]);
 
+            Logs::create([
+                'tipo_log_id' => 2,
+                'descripcion' => 'Se ha registrado un nuevo usuario',
+                'ip' => $request->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'message' => 'Usuario creado exitosamente',
@@ -113,6 +119,11 @@ class AuthController extends Controller
             }
             $user = User::where('email',$request->email)->first();
             $user->detalle;
+            Logs::create([
+                'tipo_log_id' => 1,
+                'descripcion' => 'Ingreso al sistema',
+                'ip' => $request->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'message' => 'Usuario logeado exitosamente',
@@ -132,6 +143,11 @@ class AuthController extends Controller
     {
         try {
             auth()->user()->tokens()->delete();
+            Logs::create([
+                'tipo_log_id' => 8,
+                'descripcion' => 'Se ha deslogeado del sistema',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'message' => 'Logout exitoso'

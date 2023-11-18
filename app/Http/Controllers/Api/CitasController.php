@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Citas;
 use App\Models\EstadoCita;
+use App\Models\Logs;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -17,6 +18,11 @@ class CitasController extends Controller
     public function index(){
         try{
 
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Obtener Citas',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'citas' => Citas::all(['id','fecha_cita','mensaje','user_id','estado_cita_id'])->map(function($cita){
@@ -39,7 +45,11 @@ class CitasController extends Controller
 
     public function indexUser(){
         try{
-
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Obtener Citas de usuario',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'citas' => auth()->user()->citas->map(function ($cita){
@@ -59,6 +69,11 @@ class CitasController extends Controller
 
     public function create(){
         try{
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Obtener Estados de Citas',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'estados_citas' => EstadoCita::all(['id','nombre'])
@@ -96,7 +111,11 @@ class CitasController extends Controller
                 'user_id' => $user->id,
                 'estado_cita_id' => $request->estado_cita_id
             ]);
-
+            Logs::create([
+                'tipo_log_id' => 5,
+                'descripcion' => 'Se ha registrado una nueva cita',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'messages' => 'Cita Creada correctamente'
@@ -114,6 +133,7 @@ class CitasController extends Controller
     public function edit(Citas $citas){
         try{
             $citas->estado;
+
             return response()->json([
                 'status' => true,
                 'cita' => $citas,
@@ -151,7 +171,11 @@ class CitasController extends Controller
             $cita->mensaje = $request->mensaje;
             $cita->estado_cita_id = $request->estado_cita_id;
             $cita->save();
-
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Se ha actualizado una cita',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'mensaje' => 'Cita Actualizada correctamente'
@@ -170,7 +194,11 @@ class CitasController extends Controller
         try{
 
             $cita->delete();
-
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Se ha eliminado una cita',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'mensaje' => 'Cita Eliminada correctamente'

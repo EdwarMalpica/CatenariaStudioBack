@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\FranjaHoraria;
 use App\Models\Horario;
+use App\Models\Logs;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +19,11 @@ class HorariosController extends Controller
                 $horarios->franjas = $horarios->franjas()->get(['hora_inicio','hora_fin']);
                 return  $horarios;
             });
-
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Obtener Horarios',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'horarios' => $horarios,
                 'status' => true
@@ -68,6 +73,11 @@ class HorariosController extends Controller
                     }
                 }
             }
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Actualizar Horarios',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'message' => 'Horarios actualizados correctamente.'

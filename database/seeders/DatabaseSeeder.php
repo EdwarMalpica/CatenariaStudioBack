@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(HorarioSeeder::class);
         $this->call(TipoPublicacionesSeeder::class);
         $this->call(TipoRolesSeeder::class);
+        $this->call(TipoLogsSeeder::class);
 
 
 
