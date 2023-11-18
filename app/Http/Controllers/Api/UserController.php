@@ -50,8 +50,5 @@ class UserController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-
-
-
     }
 }
