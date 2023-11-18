@@ -208,5 +208,27 @@ class ArticlesController extends Controller
         }
     }
 
+    public function destroy(Publicaciones $publicacion, Request $request){
+        try{
+            Files::where('publicacion_id', $publicacion->id)->delete();
+            Storage::deleteDirectory('public/proyecto/'.$publicacion->id);
+            $publicacion->delete();
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Se ha eliminado un articulo',
+                'ip' => $request->ip()
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Articulo borrado con exito'
+            ],200);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al actualizar el articulo'
+            ],400);
+        }
+    }
 
 }
