@@ -65,7 +65,7 @@ Route::post('/articulos/create', [ArticlesController::class,'store']);
 Route::get('/articulos', [ArticlesController::class,'index']);
 Route::get('/articulos/{publicacion}', [ArticlesController::class,'show']);
 Route::post('/articulos/edit', [ArticlesController::class,'update']);
-
+Route::delete('/articulos/{publicacion}', [ArticlesController::class,'destroy']);
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
