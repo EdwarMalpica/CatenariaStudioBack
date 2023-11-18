@@ -63,14 +63,14 @@ Route::get('/logs/citas', [LogsController::class,'LogsCitasActions']);
 //Articulos
 Route::post('/articulos/create', [ArticlesController::class,'store']);
 Route::get('/articulos', [ArticlesController::class,'index']);
+Route::get('/articulos/{publicacion}', [ArticlesController::class,'show']);
+Route::post('/articulos/edit', [ArticlesController::class,'update']);
+
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
                 ->name('logoutUser');
-
     Route::get('/email/verify/{id}/{hash}',[UserController::class,"verifyEmail"])->middleware('signed')->name('verification.verify');
-
-
     Route::get('/user', [UserController::class, 'show'])->name('showUser');
 
     //Citas
