@@ -4,17 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tipo_roles extends Model
+class FranjaHoraria extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
     protected $fillable = [
-        'nombre',
+        'hora_inicio',
+        'hora_fin',
+        'horario_id'
     ];
     protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at'
     ];
+    public function dia(){
+        return $this->belongsTo(Horario::class,'horario_id', 'id');
+    }
 }

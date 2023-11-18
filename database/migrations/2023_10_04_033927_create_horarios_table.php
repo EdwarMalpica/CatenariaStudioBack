@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('files', function (Blueprint $table) {
+        Schema::create('horarios', function (Blueprint $table) {
             $table->id();
-            //llave foranea usuarios
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
-            $table->string('nombre');
-            $table->string('path');
-            $table->string('formato');
+            $table->string('dia');
+            $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('files');
+        Schema::dropIfExists('horarios');
     }
 };
