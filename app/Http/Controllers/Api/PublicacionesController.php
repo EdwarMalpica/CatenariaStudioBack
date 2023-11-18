@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Files;
+use App\Models\Logs;
 use App\Models\Publicaciones;
 use Carbon\Carbon;
 use Exception;
@@ -16,7 +17,11 @@ class PublicacionesController extends Controller
 
     public function index(){
         try {
-
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Obtener Proyectos',
+                'ip' => request()->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'proyectos' => Publicaciones::where('tipo_publicacion_id', 1)
@@ -87,6 +92,11 @@ class PublicacionesController extends Controller
                     ]);
                 }
             }
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Se ha registrado un nuevo proyecto',
+                'ip' => $request->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'message' => 'Proyecto creado con exito'
@@ -100,13 +110,18 @@ class PublicacionesController extends Controller
         }
     }
 
-    public function show(Publicaciones $publicacion){
+    public function show(Publicaciones $publicacion, Request $request){
         try{
             $publicacion->files->map(function($file){
                 $file->path = Storage::url($file->path);
                 return $file;
             });
             $publicacion->miniatura_path = Storage::url($publicacion->miniatura_path);
+            Logs::create([
+                'tipo_log_id' => 3,
+                'descripcion' => 'Obtener proyecto,'.$publicacion->id,
+                'ip' => $request->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'publicacion' => $publicacion
@@ -159,6 +174,7 @@ class PublicacionesController extends Controller
                         $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/model', $file->getClientOriginalName());
                     }else if($file == $request->file('miniatura')){
                         $miniaturaPath = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', 'minuatura_'.$publicacion->id.'.'.$extension);
+                        $path = $miniaturaPath;
                     }else{
                         $path = $file->storeAs('public/proyecto/'.$publicacion->id.'/img', $file->getClientOriginalName());
                     }
@@ -173,6 +189,11 @@ class PublicacionesController extends Controller
                     ]);
                 }
             }
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Se ha actualizado un proyecto',
+                'ip' => $request->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'message' => 'Proyecto Actualizado con exito'
@@ -188,11 +209,16 @@ class PublicacionesController extends Controller
         }
     }
 
-    public function destroy(Publicaciones $publicacion){
+    public function destroy(Publicaciones $publicacion, Request $request){
         try{
             Files::where('publicacion_id', $publicacion->id)->delete();
             Storage::deleteDirectory('public/proyecto/'.$publicacion->id);
             $publicacion->delete();
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Se ha eliminado un proyecto',
+                'ip' => $request->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'message' => 'Proyecto borrado con exito'

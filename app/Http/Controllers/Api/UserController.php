@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Logs;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -10,9 +11,14 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 class UserController extends Controller
 {
     //Obtener datos del usuario autenticado
-    public function show(){
+    public function show(Request $request){
         try{
             $user = auth()->user();
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Obtener datos de usuario',
+                'ip' => $request->ip()
+            ]);
             return response()->json([
                 'status' => true,
                 'user' => [
@@ -45,7 +51,7 @@ class UserController extends Controller
             ]);
         }
 
-            
+
 
     }
 }
