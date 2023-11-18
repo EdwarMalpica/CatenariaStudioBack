@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\HorariosController;
+use App\Http\Controllers\Api\LogsController;
 use App\Http\Controllers\Api\PublicacionesController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -50,6 +51,11 @@ Route::get('/proyectos', [PublicacionesController::class,'index']);
 Route::get('/proyectos/{publicacion}', [PublicacionesController::class,'show']);
 Route::post('/proyectos/edit', [PublicacionesController::class,'update']);
 Route::delete('/proyectos/{publicacion}', [PublicacionesController::class,'destroy']);
+
+//Logs
+Route::get('/logs', [LogsController::class,'index']);
+Route::get('/logs/users', [LogsController::class,'LogsUserActions']);
+Route::get('/logs/proyects', [LogsController::class,'LogsProyectsActions']);
 //Requiere Autenticacion
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logoutUser', [AuthController::class, 'destroy'])
