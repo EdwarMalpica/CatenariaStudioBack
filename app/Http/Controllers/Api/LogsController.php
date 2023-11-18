@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Citas;
 use App\Models\Logs;
 use App\Models\Publicaciones;
 use Carbon\Carbon;
@@ -161,8 +162,6 @@ class LogsController extends Controller
     }
 
     public function LogsProyectsActions(){
-
-
         try{
             $proyects = Logs::where('tipo_log_id', 3)->get();
             $visitToProyectsLastMonth = Logs::where('tipo_log_id', 3)->whereMonth('created_at', date('m'))->get()->count();
@@ -228,6 +227,130 @@ class LogsController extends Controller
                 'visitToProyectsForLast12Month' => $visitToProyectsForLast12Month,
                 'increaseInProyectsLastMonth' => $increaseInProyectsLastMonth,
                 'mostVisitedProyects' => $topProjects
+            ],200);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al obtener los logs'
+            ],400);
+        }
+    }
+    public function LogsArticlesActions(){
+
+        try{
+            $articles = Logs::where('tipo_log_id', 4)->get();
+            $visitToArticlesLastMonth = Logs::where('tipo_log_id', 4)->whereMonth('created_at', date('m'))->get()->count();
+            $visitToArticlesThisWeek = Logs::where('tipo_log_id', 4)->whereBetween('created_at', [date('Y-m-d', strtotime('monday this week')), date('Y-m-d', strtotime('sunday this week'))])->get()->count();
+            $visitToArticlesLastYear = Logs::where('tipo_log_id', 4)->whereYear('created_at', date('Y'))->get()->count();
+            $visitToArticlesPenultimateMonth = Logs::where('tipo_log_id', 4)->whereMonth('created_at', date('m')-2)->get()->count();
+            $visitToArticlesForLast12Month = [];
+            $increaseInArticlesLastMonth = 0;
+
+            $articleVisits = [];
+            foreach ($articles as $log) {
+                $parts = explode(',', $log->descripcion);
+
+                $articleId = $parts[1];
+
+                if (!isset($articleVisits[$articleId])) {
+                    $articleVisits[$articleId] = 0;
+                }
+
+                $articleVisits[$articleId]++;
+            }
+
+            arsort($articleVisits);
+
+            $topArticles = [];
+
+            foreach ($articleVisits as $articleId => $visits) {
+                $article = Publicaciones::find($articleId);
+                if ($article) {
+                    $topArticles[] = [
+                        'article' => $article->titulo,
+                        'visits' => $visits
+                    ];
+                }
+            }
+
+            if ($visitToArticlesPenultimateMonth == 0) {
+                $increaseInArticlesLastMonth = 1;
+            }else{
+                $increaseInArticlesLastMonth = ($visitToArticlesLastMonth/ $visitToArticlesPenultimateMonth)*100;
+            }
+
+            for ($i = 0; $i <= 11; $i++) {
+                $mes = Carbon::now()->subMonths($i)->locale('es')->monthName;
+                $numeroDeVisitas = Logs::where('tipo_log_id', 4)
+                    ->whereMonth('created_at', date('m') - $i)
+                    ->count();
+
+                $registro = [
+                    'mes' => $mes,
+                    'valor' => $numeroDeVisitas
+                ];
+
+                $visitToArticlesForLast12Month[] = $registro;
+            }
+            return response()->json([
+                'status' => true,
+                'articles' => Publicaciones::where('tipo_publicacion_id',2)->count(),
+                'visitToAllArticles' => $articles->count(),
+                'visitToArticlesLastMonth' => $visitToArticlesLastMonth,
+                'visitToArticlesThisWeek' => $visitToArticlesThisWeek,
+                'visitToArticlesLastYear' => $visitToArticlesLastYear,
+                'visitToArticlesForLast12Month' => $visitToArticlesForLast12Month,
+                'increaseInArticlesLastMonth' => $increaseInArticlesLastMonth,
+                'mostVisitedArticles' => $topArticles
+            ],200);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al obtener los logs'
+            ],400);
+        }
+    }
+
+    public function LogsCitasActions(){
+        try{
+            $citas = Logs::where('tipo_log_id', 5)->get();
+            $citasLastMonth = Logs::where('tipo_log_id', 5)->whereMonth('created_at', date('m'))->get()->count();
+            $citasThisWeek = Logs::where('tipo_log_id', 5)->whereBetween('created_at', [date('Y-m-d', strtotime('monday this week')), date('Y-m-d', strtotime('sunday this week'))])->get()->count();
+            $citasLastYear = Logs::where('tipo_log_id', 5)->whereYear('created_at', date('Y'))->get()->count();
+            $citasPenultimateMonth = Logs::where('tipo_log_id', 5)->whereMonth('created_at', date('m')-2)->get()->count();
+            $citasForLast12Month = [];
+            $increaseInCitasLastMonth = 0;
+
+            if ($citasPenultimateMonth == 0) {
+                $increaseInCitasLastMonth = 1;
+            }else{
+                $increaseInCitasLastMonth = ($citasLastMonth/ $citasPenultimateMonth)*100;
+            }
+
+            for ($i = 0; $i <= 11; $i++) {
+                $mes = Carbon::now()->subMonths($i)->locale('es')->monthName;
+                $numeroDeVisitas = Logs::where('tipo_log_id', 5)
+                    ->whereMonth('created_at', date('m') - $i)
+                    ->count();
+
+                $registro = [
+                    'mes' => $mes,
+                    'valor' => $numeroDeVisitas
+                ];
+
+                $citasForLast12Month[] = $registro;
+            }
+            return response()->json([
+                'status' => true,
+                'citas' => Citas::all()->count(),
+                'visitToAllCitas' => $citas->count(),
+                'citasLastMonth' => $citasLastMonth,
+                'citasThisWeek' => $citasThisWeek,
+                'citasLastYear' => $citasLastYear,
+                'citasForLast12Month' => $citasForLast12Month,
+                'increaseInCitasLastMonth' => $increaseInCitasLastMonth,
             ],200);
         }catch(Exception $e){
             return response()->json([
