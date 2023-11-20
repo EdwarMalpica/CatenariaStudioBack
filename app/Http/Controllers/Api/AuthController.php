@@ -48,7 +48,6 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password)
             ]);
 
-            //event(new Registered($user));
 
             if (!$user) {
 
@@ -67,7 +66,7 @@ class AuthController extends Controller
                 'numero_telefonico' => $request->numero_telefonico,
                 'user_id' => $user_id
             ]);
-
+            $user->detalle;
             Logs::create([
                 'tipo_log_id' => 2,
                 'descripcion' => 'Se ha registrado un nuevo usuario',
@@ -76,7 +75,8 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Usuario creado exitosamente',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'token' => $user->createToken("API TOKEN")->plainTextToken,
+                'user' => $user
             ],200);
 
 

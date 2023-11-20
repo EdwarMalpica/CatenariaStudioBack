@@ -42,6 +42,24 @@ class CitasController extends Controller
             ],400);
         }
     }
+    public function show(Citas $cita){
+        try{
+            $cita->estado;
+            $cita->user;
+            $cita->user->detalle;
+            $cita->user->detalle->numero_telefonico;
+            return response()->json([
+                'status' => true,
+                'cita' => $cita
+            ],200);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al obtener la cita'
+            ],400);
+        }
+    }
 
     public function indexUser(){
         try{
