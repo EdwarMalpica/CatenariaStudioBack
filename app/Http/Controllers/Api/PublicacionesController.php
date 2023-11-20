@@ -232,4 +232,36 @@ class PublicacionesController extends Controller
         }
     }
 
+    public function downLoadFile(Request $request){
+        try{
+            $validate = Validator::make($request->all(), [
+                'file' => 'required'
+            ]);
+            if($validate->fails()){
+                return response()->json([
+                    'errors' => $validate->errors(),
+                    'status' => false,
+                    'message' => 'Error en los datos ingresados'
+                ],400);
+            }
+            $file = Storage::get($request->file);
+            $nombreArchivo = basename($request->file);
+            Logs::create([
+                'tipo_log_id' => 7,
+                'descripcion' => 'Se ha descargado un archivo',
+                'ip' => $request->ip()
+            ]);
+            return response()->make($file, 200, [
+                'Content-Type' => Storage::mimeType($request->file),
+                'Content-Disposition' => 'inline; filename="'.$nombreArchivo.'"',
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'errors' => $e->getMessage(),
+                'status' => false,
+                'message' => 'Error al descargar el archivo'
+            ],400);
+        }
+    }
+
 }

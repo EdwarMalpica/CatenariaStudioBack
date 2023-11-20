@@ -53,13 +53,16 @@ Route::get('/proyectos/{publicacion}', [PublicacionesController::class,'show']);
 Route::post('/proyectos/edit', [PublicacionesController::class,'update']);
 Route::delete('/proyectos/{publicacion}', [PublicacionesController::class,'destroy']);
 
+//Archivos
+Route::post('/archivos/download', [PublicacionesController::class,'downLoadFile']);
+
 //Logs
 Route::get('/logs', [LogsController::class,'index']);
 Route::get('/logs/users', [LogsController::class,'LogsUserActions']);
 Route::get('/logs/proyects', [LogsController::class,'LogsProyectsActions']);
 Route::get('/logs/articles', [LogsController::class,'LogsArticlesActions']);
 Route::get('/logs/citas', [LogsController::class,'LogsCitasActions']);
-
+Route::get('/logs/store', [LogsController::class,'storeVisit']);
 //Articulos
 Route::post('/articulos/create', [ArticlesController::class,'store']);
 Route::get('/articulos', [ArticlesController::class,'index']);
