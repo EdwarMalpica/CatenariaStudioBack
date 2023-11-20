@@ -14,8 +14,8 @@ class Logs extends Model
         'ip'
     ];
 
-    public function tipo_logs()
+    public function tipoLog()
     {
-        return $this->belongsTo(Tipo_Logs::class);
+        return $this->belongsTo(Tipo_Logs::class, 'tipo_log_id');
     }
 }

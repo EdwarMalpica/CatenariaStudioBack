@@ -53,7 +53,8 @@ class PublicacionesController extends Controller
                     'message' => 'Error en los datos ingresados'
                 ],400);
             }
-            $data = json_decode($request->data);
+
+            $data = json_decode($request->input('data'));
             $fecha_creacion = Carbon::parse($data->fecha_creacion);
             $publicacion = Publicaciones::create([
                 'tipo_publicacion_id' => 1,
